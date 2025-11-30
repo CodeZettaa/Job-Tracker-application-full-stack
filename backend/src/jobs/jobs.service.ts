@@ -1,59 +1,67 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { JobApplication, JobStatus } from './entities/job.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import {
+  JobApplication,
+  JobApplicationDocument,
+  JobStatus,
+} from './schemas/job-application.schema';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { FilterJobsDto } from './dto/filter-jobs.dto';
 
 @Injectable()
 export class JobsService {
-  private jobs: JobApplication[] = [];
+  constructor(
+    @InjectModel(JobApplication.name)
+    private jobModel: Model<JobApplicationDocument>,
+  ) {}
 
-  findAll(filters?: FilterJobsDto): JobApplication[] {
-    let filteredJobs = [...this.jobs];
+  async findAll(userId: string, filters?: FilterJobsDto): Promise<JobApplication[]> {
+    const query: any = { userId: new Types.ObjectId(userId) };
 
     if (filters?.status) {
-      filteredJobs = filteredJobs.filter(
-        (job) => job.status === filters.status,
-      );
+      query.status = filters.status;
     }
 
     if (filters?.company) {
-      filteredJobs = filteredJobs.filter((job) =>
-        job.companyName
-          .toLowerCase()
-          .includes(filters.company!.toLowerCase()),
-      );
+      query.companyName = { $regex: filters.company, $options: 'i' };
     }
 
     if (filters?.search) {
-      const searchLower = filters.search.toLowerCase();
-      filteredJobs = filteredJobs.filter(
-        (job) =>
-          job.positionTitle.toLowerCase().includes(searchLower) ||
-          job.companyName.toLowerCase().includes(searchLower),
-      );
+      query.$or = [
+        { positionTitle: { $regex: filters.search, $options: 'i' } },
+        { companyName: { $regex: filters.search, $options: 'i' } },
+      ];
     }
 
-    // Sort by application date (newest first)
-    return filteredJobs.sort(
-      (a, b) =>
-        new Date(b.applicationDate).getTime() -
-        new Date(a.applicationDate).getTime(),
-    );
+    const jobs = await this.jobModel
+      .find(query)
+      .sort({ applicationDate: -1 })
+      .exec();
+
+    return jobs.map((job) => this.mapToJobApplication(job));
   }
 
-  findOne(id: string): JobApplication {
-    const job = this.jobs.find((j) => j.id === id);
+  async findOne(id: string, userId: string): Promise<JobApplication> {
+    const job = await this.jobModel.findOne({
+      _id: id,
+      userId: new Types.ObjectId(userId),
+    });
+
     if (!job) {
       throw new NotFoundException(`Job with ID ${id} not found`);
     }
-    return job;
+
+    return this.mapToJobApplication(job);
   }
 
-  create(createJobDto: CreateJobDto): JobApplication {
-    const job: JobApplication = {
-      id: uuidv4(),
+  async create(
+    createJobDto: CreateJobDto,
+    userId: string,
+  ): Promise<JobApplication> {
+    const job = new this.jobModel({
+      userId: new Types.ObjectId(userId),
       positionTitle: createJobDto.positionTitle,
       companyName: createJobDto.companyName,
       location: createJobDto.location,
@@ -65,51 +73,77 @@ export class JobsService {
       salaryOffered: createJobDto.salaryOffered,
       jobUrl: createJobDto.jobUrl,
       notes: createJobDto.notes,
-    };
+    });
 
-    this.jobs.push(job);
-    return job;
+    await job.save();
+    return this.mapToJobApplication(job);
   }
 
-  update(id: string, updateJobDto: UpdateJobDto): JobApplication {
-    const jobIndex = this.jobs.findIndex((j) => j.id === id);
-    if (jobIndex === -1) {
-      throw new NotFoundException(`Job with ID ${id} not found`);
-    }
-
-    const existingJob = this.jobs[jobIndex];
-    
-    // Build updated job, handling date conversion
-    const updatedJob: JobApplication = {
-      ...existingJob,
-      positionTitle: updateJobDto.positionTitle ?? existingJob.positionTitle,
-      companyName: updateJobDto.companyName ?? existingJob.companyName,
-      location: updateJobDto.location ?? existingJob.location,
-      status: updateJobDto.status ?? existingJob.status,
-      source: updateJobDto.source ?? existingJob.source,
-      applicationDate: updateJobDto.applicationDate
-        ? new Date(updateJobDto.applicationDate)
-        : existingJob.applicationDate,
+  async update(
+    id: string,
+    updateJobDto: UpdateJobDto,
+    userId: string,
+  ): Promise<JobApplication> {
+    const updateData: any = {
       lastUpdateDate: new Date(),
-      salaryExpectation: updateJobDto.salaryExpectation ?? existingJob.salaryExpectation,
-      salaryOffered: updateJobDto.salaryOffered ?? existingJob.salaryOffered,
-      jobUrl: updateJobDto.jobUrl ?? existingJob.jobUrl,
-      notes: updateJobDto.notes ?? existingJob.notes,
     };
 
-    this.jobs[jobIndex] = updatedJob;
-    return updatedJob;
-  }
+    if (updateJobDto.positionTitle !== undefined) {
+      updateData.positionTitle = updateJobDto.positionTitle;
+    }
+    if (updateJobDto.companyName !== undefined) {
+      updateData.companyName = updateJobDto.companyName;
+    }
+    if (updateJobDto.location !== undefined) {
+      updateData.location = updateJobDto.location;
+    }
+    if (updateJobDto.status !== undefined) {
+      updateData.status = updateJobDto.status;
+    }
+    if (updateJobDto.source !== undefined) {
+      updateData.source = updateJobDto.source;
+    }
+    if (updateJobDto.applicationDate) {
+      updateData.applicationDate = new Date(updateJobDto.applicationDate);
+    }
+    if (updateJobDto.salaryExpectation !== undefined) {
+      updateData.salaryExpectation = updateJobDto.salaryExpectation;
+    }
+    if (updateJobDto.salaryOffered !== undefined) {
+      updateData.salaryOffered = updateJobDto.salaryOffered;
+    }
+    if (updateJobDto.jobUrl !== undefined) {
+      updateData.jobUrl = updateJobDto.jobUrl;
+    }
+    if (updateJobDto.notes !== undefined) {
+      updateData.notes = updateJobDto.notes;
+    }
 
-  remove(id: string): void {
-    const jobIndex = this.jobs.findIndex((j) => j.id === id);
-    if (jobIndex === -1) {
+    const job = await this.jobModel.findOneAndUpdate(
+      { _id: id, userId: new Types.ObjectId(userId) },
+      updateData,
+      { new: true },
+    );
+
+    if (!job) {
       throw new NotFoundException(`Job with ID ${id} not found`);
     }
-    this.jobs.splice(jobIndex, 1);
+
+    return this.mapToJobApplication(job);
   }
 
-  getStats(): Record<JobStatus, number> {
+  async remove(id: string, userId: string): Promise<void> {
+    const result = await this.jobModel.deleteOne({
+      _id: id,
+      userId: new Types.ObjectId(userId),
+    });
+
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`Job with ID ${id} not found`);
+    }
+  }
+
+  async getStats(userId: string): Promise<Record<JobStatus, number>> {
     const stats: Record<JobStatus, number> = {
       applied: 0,
       interviewing: 0,
@@ -118,11 +152,34 @@ export class JobsService {
       archived: 0,
     };
 
-    this.jobs.forEach((job) => {
+    const jobs = await this.jobModel
+      .find({ userId: new Types.ObjectId(userId) })
+      .select('status')
+      .exec();
+
+    jobs.forEach((job) => {
       stats[job.status]++;
     });
 
     return stats;
+  }
+
+  private mapToJobApplication(job: JobApplicationDocument): JobApplication {
+    return {
+      id: job._id.toString(),
+      userId: job.userId.toString(),
+      positionTitle: job.positionTitle,
+      companyName: job.companyName,
+      location: job.location,
+      status: job.status,
+      source: job.source,
+      applicationDate: job.applicationDate,
+      lastUpdateDate: job.lastUpdateDate,
+      salaryExpectation: job.salaryExpectation,
+      salaryOffered: job.salaryOffered,
+      jobUrl: job.jobUrl,
+      notes: job.notes,
+    } as JobApplication;
   }
 }
 

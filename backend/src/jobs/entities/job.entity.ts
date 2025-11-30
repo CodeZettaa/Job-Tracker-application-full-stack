@@ -13,6 +13,7 @@ export type JobSource =
 
 export class JobApplication {
   id: string;
+  userId: string;
   positionTitle: string;
   companyName: string;
   location?: string;

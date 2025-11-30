@@ -3,25 +3,28 @@ import {
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from './entities/user.entity';
+import { User, UserDocument } from './schemas/user.schema';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  private users: User[] = [];
   private readonly saltRounds = 10;
 
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
 
   async register(registerDto: RegisterDto): Promise<{ user: Omit<User, 'password'>; accessToken: string }> {
     // Check if user already exists
-    const existingUser = this.users.find(
-      (user) => user.email === registerDto.email.toLowerCase(),
-    );
+    const existingUser = await this.userModel.findOne({
+      email: registerDto.email.toLowerCase(),
+    });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -30,34 +33,39 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(registerDto.password, this.saltRounds);
 
     // Create user
-    const user: User = {
-      id: uuidv4(),
+    const user = new this.userModel({
       email: registerDto.email.toLowerCase(),
       password: hashedPassword,
       firstName: registerDto.firstName,
       lastName: registerDto.lastName,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    });
 
-    this.users.push(user);
+    await user.save();
 
     // Generate JWT token
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user._id.toString(), email: user.email };
     const accessToken = this.jwtService.sign(payload);
 
     // Return user without password
-    const { password, ...userWithoutPassword } = user;
+    const userObject = user.toObject();
+    const { password, ...userWithoutPassword } = userObject;
     return {
-      user: userWithoutPassword,
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      } as any,
       accessToken,
     };
   }
 
   async login(loginDto: LoginDto): Promise<{ user: Omit<User, 'password'>; accessToken: string }> {
-    const user = this.users.find(
-      (u) => u.email === loginDto.email.toLowerCase(),
-    );
+    const user = await this.userModel.findOne({
+      email: loginDto.email.toLowerCase(),
+    });
 
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
@@ -74,27 +82,35 @@ export class AuthService {
     }
 
     // Generate JWT token
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user._id.toString(), email: user.email };
     const accessToken = this.jwtService.sign(payload);
 
     // Return user without password
-    const { password, ...userWithoutPassword } = user;
+    const userObject = user.toObject();
+    const { password, ...userWithoutPassword } = userObject;
     return {
-      user: userWithoutPassword,
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      } as any,
       accessToken,
     };
   }
 
-  async validateUser(userId: string): Promise<User | null> {
-    const user = this.users.find((u) => u.id === userId);
+  async validateUser(userId: string): Promise<UserDocument | null> {
+    const user = await this.userModel.findById(userId);
     if (!user) {
       return null;
     }
     return user;
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return this.users.find((u) => u.email === email.toLowerCase()) || null;
+  async findUserByEmail(email: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ email: email.toLowerCase() });
   }
 }
 

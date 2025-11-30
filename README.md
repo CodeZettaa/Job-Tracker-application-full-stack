@@ -285,6 +285,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 The frontend is configured for automatic deployment to GitHub Pages. See [GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md) for setup instructions.
 
 **Quick Setup:**
+
 1. Go to repository **Settings** → **Pages**
 2. Select **Source**: `GitHub Actions`
 3. Push to `main` branch - deployment happens automatically
@@ -320,12 +321,16 @@ The frontend is configured for automatic deployment to GitHub Pages. See [GITHUB
 
 ## 📝 Development Notes
 
-- The backend uses in-memory storage. Data will be lost on server restart.
+- The backend uses **MongoDB** for persistent data storage.
+- Set `MONGODB_URI` environment variable to connect to your MongoDB instance.
+- For local development, use `mongodb://localhost:27017/job-tracker`.
+- For production, use MongoDB Atlas or another cloud MongoDB service.
 - CORS is configured to allow requests from the frontend origin.
 - All dates are handled as ISO strings for consistency.
 - JWT tokens expire after 7 days.
 - Theme preference is saved in browser localStorage.
 - User sessions persist across page refreshes via localStorage.
+- Jobs are associated with users - each user only sees their own jobs.
 
 ## 🧪 Testing
 
