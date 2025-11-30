@@ -301,9 +301,9 @@ The frontend is configured for automatic deployment to GitHub Pages. See [GITHUB
 
 **Frontend:**
 
-- **Vercel** (recommended) - Free tier, automatic deployments
+- **GitHub Pages** (recommended) - Free hosting, automatic deployments via GitHub Actions
+- **Vercel** - Free tier, automatic deployments
 - **Netlify** - Great alternative
-- **GitHub Pages** - Free hosting
 - **Cloudflare Pages** - Fast CDN
 
 ### Environment Variables
