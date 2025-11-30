@@ -280,6 +280,16 @@ frontend/src/app/
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 
+### GitHub Pages (Frontend)
+
+The frontend is configured for automatic deployment to GitHub Pages. See [GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md) for setup instructions.
+
+**Quick Setup:**
+1. Go to repository **Settings** → **Pages**
+2. Select **Source**: `GitHub Actions`
+3. Push to `main` branch - deployment happens automatically
+4. Your site will be live at: `https://CodeZettaa.github.io/Job-Tracker-application-full-stack/`
+
 ### Quick Deploy Options
 
 **Backend:**

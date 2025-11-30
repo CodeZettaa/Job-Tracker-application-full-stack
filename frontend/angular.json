@@ -32,6 +32,7 @@
                 }
               ],
               "outputHashing": "all",
+              "baseHref": "/Job-Tracker-application-full-stack/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

@@ -90,7 +90,25 @@ git push -u origin main
 
 ## 🎨 Step 3: Deploy Frontend (Angular)
 
-### Option A: Vercel (Recommended - Free tier available)
+### Option A: GitHub Pages (Recommended - Free, Automatic)
+
+1. **Enable GitHub Pages:**
+   - Go to your repository **Settings** → **Pages**
+   - Under **Source**, select: `GitHub Actions`
+   - Save settings
+
+2. **Set Environment Variable (Optional):**
+   - Go to **Settings** → **Secrets and variables** → **Actions**
+   - Add secret: `API_URL` = Your backend URL
+
+3. **Deploy:**
+   - Push changes to `main` branch
+   - GitHub Actions will automatically build and deploy
+   - Your site will be live at: `https://CodeZettaa.github.io/Job-Tracker-application-full-stack/`
+
+See [GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md) for detailed instructions.
+
+### Option B: Vercel (Free tier available)
 
 1. **Sign up** at [Vercel](https://vercel.com)
 2. **Import Project** → Select your GitHub repository
