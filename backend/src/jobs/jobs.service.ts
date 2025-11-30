@@ -165,9 +165,13 @@ export class JobsService {
   }
 
   private mapToJobApplication(job: JobApplicationDocument): JobApplication {
+    const userId = job.userId instanceof Types.ObjectId 
+      ? job.userId.toString() 
+      : (job.userId as any)?.toString() || String(job.userId);
+    
     return {
       id: job._id.toString(),
-      userId: job.userId.toString(),
+      userId: userId,
       positionTitle: job.positionTitle,
       companyName: job.companyName,
       location: job.location,
@@ -179,7 +183,7 @@ export class JobsService {
       salaryOffered: job.salaryOffered,
       jobUrl: job.jobUrl,
       notes: job.notes,
-    } as JobApplication;
+    } as any as JobApplication;
   }
 }
 

@@ -47,16 +47,15 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     // Return user without password
-    const userObject = user.toObject();
-    const { password, ...userWithoutPassword } = userObject;
+    const userObject = user.toObject() as any;
     return {
       user: {
         id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        createdAt: userObject.createdAt || new Date(),
+        updatedAt: userObject.updatedAt || new Date(),
       } as any,
       accessToken,
     };
@@ -86,16 +85,15 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     // Return user without password
-    const userObject = user.toObject();
-    const { password, ...userWithoutPassword } = userObject;
+    const userObject = user.toObject() as any;
     return {
       user: {
         id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        createdAt: userObject.createdAt || new Date(),
+        updatedAt: userObject.updatedAt || new Date(),
       } as any,
       accessToken,
     };
