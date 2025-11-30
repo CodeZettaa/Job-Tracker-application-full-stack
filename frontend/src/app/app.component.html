@@ -1,0 +1,33 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-left">
+          <h1>
+            <span class="logo-icon">💼</span>
+            Job Tracker
+          </h1>
+        </div>
+        <div class="header-right">
+          @if (authService.isAuthenticated()) {
+          <div class="user-menu">
+            <span class="user-name">
+              {{ authService.getCurrentUser()?.firstName }}
+              {{ authService.getCurrentUser()?.lastName }}
+            </span>
+            <button class="btn btn-outline btn-sm" (click)="logout()">
+              Logout
+            </button>
+          </div>
+          }
+          <app-theme-toggle></app-theme-toggle>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="app-main">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,107 @@
+<div class="jobs-page">
+  <div class="page-header">
+    <h2>Job Applications</h2>
+    <a routerLink="/jobs/new" class="btn btn-primary">Add New Job</a>
+  </div>
+
+  <app-job-stats [stats]="store.stats()" />
+
+  <div class="filters-card card">
+    <div class="filters">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select
+          class="form-control"
+          [(ngModel)]="statusFilter"
+          (change)="applyFilters()"
+        >
+          <option value="">All Statuses</option>
+          <option value="applied">Applied</option>
+          <option value="interviewing">Interviewing</option>
+          <option value="offer">Offer</option>
+          <option value="rejected">Rejected</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Search</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by title or company..."
+          [(ngModel)]="searchFilter"
+          (input)="applyFilters()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Company</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Filter by company..."
+          [(ngModel)]="companyFilter"
+          (input)="applyFilters()"
+        />
+      </div>
+    </div>
+  </div>
+
+  @if (store.loading()) {
+  <div class="text-center">Loading...</div>
+  } @else if (store.error()) {
+  <div class="error-message">{{ store.error() }}</div>
+  } @else if (store.filteredJobs().length === 0) {
+  <div class="empty-state">
+    <p>No jobs found. Add your first job application!</p>
+  </div>
+  } @else {
+  <div class="jobs-list">
+    @for (job of store.filteredJobs(); track job.id) {
+    <div class="job-card card">
+      <div class="job-header">
+        <div>
+          <h3 class="job-title">{{ job.positionTitle }}</h3>
+          <p class="job-company">{{ job.companyName }}</p>
+          @if (job.location) {
+          <p class="job-location">{{ job.location }}</p>
+          }
+        </div>
+        <span class="badge badge-{{ job.status }}">
+          {{ formatStatus(job.status) }}
+        </span>
+      </div>
+
+      <div class="job-meta">
+        <span class="job-date">
+          Applied: {{ formatDate(job.applicationDate) }}
+        </span>
+        @if (job.source) {
+        <span class="job-source">Source: {{ formatSource(job.source) }}</span>
+        }
+      </div>
+
+      @if (job.notes) {
+      <p class="job-notes">{{ job.notes }}</p>
+      }
+
+      <div class="job-actions">
+        <a [routerLink]="['/jobs', job.id]" class="btn btn-outline btn-sm">
+          View
+        </a>
+        <a
+          [routerLink]="['/jobs', job.id, 'edit']"
+          class="btn btn-outline btn-sm"
+        >
+          Edit
+        </a>
+        <button class="btn btn-danger btn-sm" (click)="deleteJob(job.id)">
+          Delete
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

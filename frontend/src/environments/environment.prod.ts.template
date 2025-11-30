@@ -1,0 +1,6 @@
+// Template file - copy this to environment.prod.ts and update the API URL
+export const environment = {
+  production: true,
+  apiUrl: 'YOUR_BACKEND_URL_HERE', // Replace with your deployed backend URL
+};
+

@@ -1,0 +1,158 @@
+<div class="job-form-page">
+  <div class="page-header">
+    <h2>{{ isEditMode ? "Edit Job Application" : "New Job Application" }}</h2>
+    <a routerLink="/jobs" class="btn btn-outline">Back to List</a>
+  </div>
+
+  <div class="card">
+    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Position Title *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="positionTitle"
+            [class.error]="
+              jobForm.get('positionTitle')?.invalid &&
+              jobForm.get('positionTitle')?.touched
+            "
+          />
+          @if ( jobForm.get('positionTitle')?.invalid &&
+          jobForm.get('positionTitle')?.touched ) {
+          <small class="error-text">Position title is required</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Company Name *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="companyName"
+            [class.error]="
+              jobForm.get('companyName')?.invalid &&
+              jobForm.get('companyName')?.touched
+            "
+          />
+          @if ( jobForm.get('companyName')?.invalid &&
+          jobForm.get('companyName')?.touched ) {
+          <small class="error-text">Company name is required</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="location"
+            placeholder="e.g., San Francisco, CA"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status *</label>
+          <select
+            class="form-control"
+            formControlName="status"
+            [class.error]="
+              jobForm.get('status')?.invalid && jobForm.get('status')?.touched
+            "
+          >
+            <option value="applied">Applied</option>
+            <option value="interviewing">Interviewing</option>
+            <option value="offer">Offer</option>
+            <option value="rejected">Rejected</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Source</label>
+          <select class="form-control" formControlName="source">
+            <option value="">Select source</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="company_website">Company Website</option>
+            <option value="referral">Referral</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Application Date *</label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="applicationDate"
+            [class.error]="
+              jobForm.get('applicationDate')?.invalid &&
+              jobForm.get('applicationDate')?.touched
+            "
+          />
+          @if ( jobForm.get('applicationDate')?.invalid &&
+          jobForm.get('applicationDate')?.touched ) {
+          <small class="error-text">Application date is required</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Salary Expectation</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="salaryExpectation"
+            placeholder="e.g., 120000"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Salary Offered</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="salaryOffered"
+            placeholder="e.g., 130000"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Job URL</label>
+        <input
+          type="url"
+          class="form-control"
+          formControlName="jobUrl"
+          placeholder="https://..."
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea
+          class="form-control"
+          formControlName="notes"
+          rows="4"
+          placeholder="Add any notes about this application..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="jobForm.invalid || store.loading()"
+        >
+          {{ isEditMode ? "Update" : "Create" }} Job
+        </button>
+        <a routerLink="/jobs" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>

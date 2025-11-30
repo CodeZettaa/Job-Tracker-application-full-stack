@@ -1,0 +1,188 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Sign up to start tracking your job applications</p>
+      </div>
+
+      @if (authService.error()) {
+        <div class="error-message">
+          {{ authService.error() }}
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First Name</label>
+            <input
+              id="firstName"
+              type="text"
+              class="form-control"
+              formControlName="firstName"
+              placeholder="John"
+              [class.error]="
+                registerForm.get('firstName')?.invalid &&
+                registerForm.get('firstName')?.touched
+              "
+            />
+          @if (
+            registerForm.get("firstName")?.invalid &&
+            registerForm.get("firstName")?.touched
+          ) {
+            <small class="error-text">
+              @if (registerForm.get("firstName")?.errors?.["required"]) {
+                First name is required
+              } @else if (
+                registerForm.get("firstName")?.errors?.["minlength"]
+              ) {
+                Must be at least 2 characters
+              }
+            </small>
+          }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last Name</label>
+            <input
+              id="lastName"
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+              placeholder="Doe"
+              [class.error]="
+                registerForm.get('lastName')?.invalid &&
+                registerForm.get('lastName')?.touched
+              "
+            />
+          @if (
+            registerForm.get("lastName")?.invalid &&
+            registerForm.get("lastName")?.touched
+          ) {
+            <small class="error-text">
+              @if (registerForm.get("lastName")?.errors?.["required"]) {
+                Last name is required
+              } @else if (
+                registerForm.get("lastName")?.errors?.["minlength"]
+              ) {
+                Must be at least 2 characters
+              }
+            </small>
+          }
+          </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="you@example.com"
+            [class.error]="
+              registerForm.get('email')?.invalid &&
+              registerForm.get('email')?.touched
+            "
+          />
+          @if (
+            registerForm.get("email")?.invalid &&
+            registerForm.get("email")?.touched
+          ) {
+            <small class="error-text">
+              @if (registerForm.get("email")?.errors?.["required"]) {
+                Email is required
+              } @else if (registerForm.get("email")?.errors?.["email"]) {
+                Please enter a valid email
+              }
+            </small>
+          }
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Create a password"
+            [class.error]="
+              registerForm.get('password')?.invalid &&
+              registerForm.get('password')?.touched
+            "
+          />
+          @if (
+            registerForm.get("password")?.invalid &&
+            registerForm.get("password")?.touched
+          ) {
+            <small class="error-text">
+              @if (registerForm.get("password")?.errors?.["required"]) {
+                Password is required
+              } @else if (
+                registerForm.get("password")?.errors?.["minlength"]
+              ) {
+                Must be at least 8 characters
+              } @else if (
+                registerForm.get("password")?.errors?.["pattern"]
+              ) {
+                Must contain uppercase, lowercase, and number
+              }
+            </small>
+          }
+          <small class="form-hint">
+            Must contain at least 8 characters with uppercase, lowercase, and a number
+          </small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="confirmPassword">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            class="form-control"
+            formControlName="confirmPassword"
+            placeholder="Confirm your password"
+            [class.error]="
+              registerForm.get('confirmPassword')?.invalid ||
+              registerForm.errors?.['passwordMismatch']
+            "
+          />
+          @if (
+            registerForm.get("confirmPassword")?.invalid &&
+            registerForm.get("confirmPassword")?.touched
+          ) {
+            <small class="error-text">Please confirm your password</small>
+          }
+          @if (
+            registerForm.errors?.["passwordMismatch"] &&
+            registerForm.get("confirmPassword")?.touched
+          ) {
+            <small class="error-text">Passwords do not match</small>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="registerForm.invalid || authService.loading()"
+        >
+          @if (authService.loading()) {
+            <span class="loading"></span>
+            Creating account...
+          } @else {
+            Create Account
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>
+          Already have an account?
+          <a routerLink="/auth/login" class="auth-link">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
