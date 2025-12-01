@@ -83,11 +83,13 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/job-tracker
 ```
 
 **To generate JWT_SECRET:**
+
 ```bash
 openssl rand -base64 32
 ```
 
 **Important:**
+
 - Replace `your-super-secret-jwt-key-here` with a strong random string
 - Replace `mongodb+srv://...` with your actual MongoDB connection string from Step 1.4
 - Replace `https://your-frontend.onrender.com` with your frontend URL (you'll update this after deploying frontend)
@@ -130,6 +132,7 @@ API_URL=https://your-backend.onrender.com
 ```
 
 **Important:**
+
 - Replace `https://your-backend.onrender.com` with your actual backend URL from Step 2.4
 
 ### 3.4 Deploy
@@ -180,6 +183,7 @@ Render automatically deploys when you push to your main branch. No GitHub Action
 2. **Backend URL:** Test with `https://your-backend.onrender.com` (should show NestJS welcome or your API)
 
 Try:
+
 - Register a new account
 - Login
 - Create a job application
@@ -192,17 +196,20 @@ Try:
 Once everything is working, add these links to your portfolio:
 
 ### Live Application:
+
 ```
 Frontend: https://job-tracker-frontend.onrender.com
 Backend API: https://job-tracker-backend.onrender.com
 ```
 
 ### Repository:
+
 ```
 GitHub: https://github.com/CodeZettaa/Job-Tracker-application-full-stack
 ```
 
 ### Tech Stack:
+
 - **Frontend:** Angular 19, TypeScript, RxJS
 - **Backend:** NestJS, TypeScript, MongoDB
 - **Authentication:** JWT
@@ -214,21 +221,25 @@ GitHub: https://github.com/CodeZettaa/Job-Tracker-application-full-stack
 ## 🐛 Troubleshooting
 
 ### Backend not connecting?
+
 - Check that `CORS_ORIGINS` includes your frontend URL
 - Verify `MONGODB_URI` is correct and accessible
 - Check Render logs for errors (Dashboard → Your service → Logs)
 
 ### Frontend not loading?
+
 - Verify `API_URL` environment variable is set correctly
 - Check that build completed successfully
 - Check Render logs for build errors
 
 ### Database connection issues?
+
 - Verify MongoDB Atlas network access allows Render IPs
 - Check that MongoDB connection string is correct
 - Ensure database user has proper permissions
 
 ### Build failures?
+
 - Check that all dependencies are in package.json
 - Verify build commands are correct
 - Check Render logs for specific error messages
@@ -250,4 +261,3 @@ GitHub: https://github.com/CodeZettaa/Job-Tracker-application-full-stack
 Your fullstack application is now live on Render and ready to showcase in your portfolio!
 
 **Need help?** Check the logs in Render dashboard for detailed error messages.
-

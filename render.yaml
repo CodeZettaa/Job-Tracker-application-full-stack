@@ -30,4 +30,3 @@ services:
         value: --max-old-space-size=4096
       - key: API_URL
         sync: false
-
