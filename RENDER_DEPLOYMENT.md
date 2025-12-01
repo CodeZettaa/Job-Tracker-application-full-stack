@@ -65,7 +65,7 @@ Fill in the following settings:
 - **Branch:** `main`
 - **Root Directory:** `backend`
 - **Environment:** `Node`
-- **Build Command:** `npm install && npm run build`
+- **Build Command:** `npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build`
 - **Start Command:** `npm run start:prod`
 - **Plan:** `Free` (or choose a paid plan)
 
@@ -76,6 +76,7 @@ Click **"Advanced"** → **"Add Environment Variable"** and add:
 ```
 NODE_ENV=production
 PORT=10000
+NODE_OPTIONS=--max-old-space-size=1024
 JWT_SECRET=your-super-secret-jwt-key-here
 CORS_ORIGINS=https://your-frontend.onrender.com
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/job-tracker
@@ -115,7 +116,7 @@ Fill in the following settings:
 - **Name:** `job-tracker-frontend` (or your preferred name)
 - **Branch:** `main`
 - **Root Directory:** `frontend`
-- **Build Command:** `npm install && npm run build:render`
+- **Build Command:** `npm install && NODE_OPTIONS=--max-old-space-size=4096 npm run build:render`
 - **Publish Directory:** `dist/job-tracker-frontend/browser`
 - **Plan:** `Free`
 
@@ -124,6 +125,7 @@ Fill in the following settings:
 Click **"Advanced"** → **"Add Environment Variable"** and add:
 
 ```
+NODE_OPTIONS=--max-old-space-size=4096
 API_URL=https://your-backend.onrender.com
 ```
 

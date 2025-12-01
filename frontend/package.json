@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "node scripts/replace-api-url.js && ng build",
-    "build:render": "node scripts/replace-api-url.js && ng build --configuration=render",
+    "build:render": "node scripts/replace-api-url.js && node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng.js build --configuration=render",
     "build:gh-pages": "node scripts/replace-api-url.js && ng build --base-href=/Job-Tracker-application-full-stack/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

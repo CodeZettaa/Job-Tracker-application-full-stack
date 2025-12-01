@@ -3,13 +3,15 @@ services:
     name: job-tracker-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install && npm run build
+    buildCommand: cd backend && npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build
     startCommand: cd backend && npm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=1024
       - key: JWT_SECRET
         sync: false
       - key: CORS_ORIGINS
@@ -21,9 +23,11 @@ services:
     name: job-tracker-frontend
     env: static
     plan: free
-    buildCommand: cd frontend && npm install && npm run build:render
+    buildCommand: cd frontend && npm install && NODE_OPTIONS=--max-old-space-size=4096 npm run build:render
     staticPublishPath: ./frontend/dist/job-tracker-frontend/browser
     envVars:
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=4096
       - key: API_URL
         sync: false
 
