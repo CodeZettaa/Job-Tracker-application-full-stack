@@ -1,7 +1,6 @@
 export const environment = {
   production: true,
-  // Update this with your backend URL after deployment
-  // For Vercel/Netlify, you can use environment variables at build time
+  // This will be replaced by the build script with the actual API URL
   apiUrl: 'https://your-backend-url.railway.app',
 };
 
