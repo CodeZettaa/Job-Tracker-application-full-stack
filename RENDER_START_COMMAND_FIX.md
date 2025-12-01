@@ -10,19 +10,25 @@ If you're getting `==> No open ports detected` and `==> Running 'npm start'`, Re
 2. Click **Settings** tab
 3. Find **Start Command** field
 4. **Change it from:**
+
    ```
    npm start
    ```
+
    **To:**
+
    ```
    npm run start:prod
    ```
+
    Or if using root directory:
+
    ```
    cd backend && npm run start:prod
    ```
 
 5. **Also verify Build Command is:**
+
    ```
    cd backend && npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build
    ```
@@ -47,6 +53,7 @@ MONGODB_URI=mongodb+srv://...
 ### Step 3: Verify Root Directory
 
 Make sure **Root Directory** is set to:
+
 ```
 backend
 ```
@@ -94,6 +101,7 @@ await app.listen(port);
 Here's what your backend service should look like:
 
 **Settings Tab:**
+
 - **Name:** `job-tracker-backend`
 - **Root Directory:** `backend`
 - **Environment:** `Node`
@@ -102,6 +110,7 @@ Here's what your backend service should look like:
 - **Plan:** `Free` (or your chosen plan)
 
 **Environment Tab:**
+
 - `NODE_ENV=production`
 - `PORT=10000`
 - `NODE_OPTIONS=--max-old-space-size=1024`
@@ -112,4 +121,3 @@ Here's what your backend service should look like:
 ---
 
 **After fixing, your service should deploy successfully!** 🎉
-
