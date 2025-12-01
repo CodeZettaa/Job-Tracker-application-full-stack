@@ -3,6 +3,7 @@
 ## The Real Problem
 
 Your error shows:
+
 ```
 ==> Running 'npm start'
 > nest start
@@ -23,15 +24,19 @@ Your error shows:
 2. Click **Settings** tab
 3. Find **Start Command** field
 4. **DELETE** whatever is there and replace with:
+
    ```
    npm run start:prod
    ```
+
    Or if you have Root Directory set:
+
    ```
    cd backend && npm run start:prod
    ```
 
 5. **VERIFY Build Command is:**
+
    ```
    cd backend && npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build
    ```
@@ -54,20 +59,22 @@ MONGODB_URI=mongodb+srv://...
 ### Step 3: Verify Root Directory
 
 Make sure **Root Directory** is set to:
+
 ```
 backend
 ```
 
 ## 🔍 Why This Happens
 
-| Command | What It Does | Memory Usage |
-|---------|-------------|--------------|
-| `npm start` | Runs `nest start` (dev mode) | **HIGH** - File watching, hot reload |
-| `npm run start:prod` | Runs `node dist/main` (production) | **LOW** - Just runs the app |
+| Command              | What It Does                       | Memory Usage                         |
+| -------------------- | ---------------------------------- | ------------------------------------ |
+| `npm start`          | Runs `nest start` (dev mode)       | **HIGH** - File watching, hot reload |
+| `npm run start:prod` | Runs `node dist/main` (production) | **LOW** - Just runs the app          |
 
 ## ✅ Code Analysis: No Infinite Loops Found
 
 I checked your codebase and found:
+
 - ✅ No infinite loops
 - ✅ No recursive functions
 - ✅ No unclosed subscriptions
@@ -88,6 +95,7 @@ After updating the start command, you should see:
 ```
 
 Instead of:
+
 ```
 ==> Running 'npm start'
 > nest start
@@ -107,4 +115,3 @@ Instead of:
 **The issue IS using development mode (`nest start`) in production.**
 
 Fix the start command and your app will work! 🎉
-

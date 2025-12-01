@@ -3,8 +3,8 @@ services:
     name: job-tracker-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build
-    startCommand: cd backend && npm run start:prod
+    buildCommand: cd backend && npm install && NODE_OPTIONS=--max-old-space-size=2048 npm run build && ls -la dist/
+    startCommand: cd backend && node dist/main.js
     envVars:
       - key: NODE_ENV
         value: production
