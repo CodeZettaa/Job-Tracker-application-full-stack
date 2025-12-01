@@ -8,6 +8,7 @@
     "build": "ng build",
     "build:prod": "node scripts/replace-api-url.js && ng build",
     "build:render": "node scripts/replace-api-url.js && ng build --configuration=render",
+    "build:gh-pages": "node scripts/replace-api-url.js && ng build --base-href=/Job-Tracker-application-full-stack/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
