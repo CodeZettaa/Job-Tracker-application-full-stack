@@ -3,6 +3,7 @@
 ## The Problem
 
 The error shows:
+
 ```
 Error: querySrv ENOTFOUND _mongodb._tcp.1511
 ```
@@ -25,16 +26,19 @@ This means your `MONGODB_URI` environment variable in Render is **incorrect or m
 ### Step 2: Format the Connection String Correctly
 
 **Replace these parts:**
+
 - `<username>` → Your MongoDB Atlas username
 - `<password>` → Your MongoDB Atlas password (URL-encode special characters if needed)
 - Add database name at the end: `/job-tracker`
 
 **Final format should be:**
+
 ```
 mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/job-tracker?retryWrites=true&w=majority
 ```
 
 **Important:**
+
 - ✅ Use `mongodb+srv://` (not `mongodb://`)
 - ✅ Include the full cluster name (e.g., `cluster0.xxxxx.mongodb.net`)
 - ✅ Add database name: `/job-tracker`
@@ -79,18 +83,19 @@ mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/job-tracker?retryWrit
 If your password has special characters like `@`, `#`, `%`, etc., you need to **URL-encode** them:
 
 | Character | URL-Encoded |
-|-----------|-------------|
-| `@` | `%40` |
-| `#` | `%23` |
-| `%` | `%25` |
-| `&` | `%26` |
-| `+` | `%2B` |
-| `=` | `%3D` |
-| `?` | `%3F` |
-| `/` | `%2F` |
-| `:` | `%3A` |
+| --------- | ----------- |
+| `@`       | `%40`       |
+| `#`       | `%23`       |
+| `%`       | `%25`       |
+| `&`       | `%26`       |
+| `+`       | `%2B`       |
+| `=`       | `%3D`       |
+| `?`       | `%3F`       |
+| `/`       | `%2F`       |
+| `:`       | `%3A`       |
 
 **Example:**
+
 - Password: `MyP@ss#123`
 - URL-encoded: `MyP%40ss%23123`
 - Connection string: `mongodb+srv://username:MyP%40ss%23123@cluster0.xxxxx.mongodb.net/job-tracker`
@@ -102,6 +107,7 @@ If your password has special characters like `@`, `#`, `%`, etc., you need to **
 ### Issue 3: Missing Database Name
 
 Make sure you add `/job-tracker` (or your database name) before the `?`:
+
 ```
 ✅ mongodb+srv://...@cluster.net/job-tracker?retryWrites=true
 ❌ mongodb+srv://...@cluster.net?retryWrites=true
@@ -110,6 +116,7 @@ Make sure you add `/job-tracker` (or your database name) before the `?`:
 ### Issue 4: Wrong Cluster Name
 
 The cluster name should be something like:
+
 - `cluster0.xxxxx.mongodb.net`
 - `cluster1.yyyyy.mongodb.net`
 
@@ -118,16 +125,19 @@ NOT just a number like `1511`.
 ## ✅ Correct Connection String Examples
 
 **Example 1: Basic**
+
 ```
 mongodb+srv://myuser:mypassword@cluster0.abc123.mongodb.net/job-tracker?retryWrites=true&w=majority
 ```
 
 **Example 2: With URL-encoded password**
+
 ```
 mongodb+srv://myuser:MyP%40ss%23123@cluster0.abc123.mongodb.net/job-tracker?retryWrites=true&w=majority
 ```
 
 **Example 3: With additional options**
+
 ```
 mongodb+srv://myuser:mypassword@cluster0.abc123.mongodb.net/job-tracker?retryWrites=true&w=majority&appName=JobTracker
 ```
@@ -137,6 +147,7 @@ mongodb+srv://myuser:mypassword@cluster0.abc123.mongodb.net/job-tracker?retryWri
 After updating:
 
 1. **Watch Render logs** - You should see:
+
    ```
    [Nest] Connected to MongoDB successfully
    🚀 Backend server running on port 10000
@@ -163,6 +174,7 @@ After updating:
 ## 🎯 After Fixing
 
 Your app should connect successfully and you'll see:
+
 ```
 [Nest] Connected to MongoDB successfully
 🚀 Backend server running on port 10000
@@ -171,4 +183,3 @@ Your app should connect successfully and you'll see:
 ---
 
 **Need help?** Double-check your connection string format matches the examples above exactly!
-
