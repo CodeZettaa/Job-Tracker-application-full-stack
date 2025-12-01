@@ -38,9 +38,9 @@ jobs:
 
       - name: Build
         working-directory: ./frontend
-        run: npm run build -- --base-href=/Job-Tracker-application-full-stack/
+        run: node scripts/replace-api-url.js && npm run build -- --base-href=/Job-Tracker-application-full-stack/
         env:
-          API_URL: ${{ secrets.API_URL || 'http://localhost:3000' }}
+          API_URL: ${{ secrets.API_URL || 'https://job-tracker-application-full-stack.onrender.com' }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

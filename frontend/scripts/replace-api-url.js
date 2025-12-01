@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Get API URL from environment variable or use default
-const apiUrl = process.env.API_URL || 'https://your-backend-url.railway.app';
+const apiUrl = process.env.API_URL || 'https://job-tracker-application-full-stack.onrender.com';
 
 // Path to environment.prod.ts
 const envPath = path.join(__dirname, '../src/environments/environment.prod.ts');
