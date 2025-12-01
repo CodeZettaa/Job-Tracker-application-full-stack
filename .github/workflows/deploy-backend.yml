@@ -31,9 +31,12 @@ jobs:
         working-directory: ./backend
         run: npm run build
       
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      
       - name: Deploy to Railway
-        uses: bervproject/railway-deploy@v0.1.2
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: ${{ secrets.RAILWAY_SERVICE_ID }}
+        working-directory: ./backend
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
