@@ -17,11 +17,22 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     // MongoDB connection with ConfigService
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri:
+      useFactory: async (configService: ConfigService) => {
+        const uri =
           configService.get<string>('MONGODB_URI') ||
-          'mongodb://localhost:27017/job-tracker',
-      }),
+          'mongodb://localhost:27017/job-tracker';
+        
+        // Log masked connection string for debugging (hide password)
+        const maskedUri = uri.replace(
+          /mongodb\+srv:\/\/([^:]+):([^@]+)@/,
+          'mongodb+srv://$1:***@'
+        );
+        console.log('🔗 MongoDB Connection String (masked):', maskedUri);
+        console.log('🔗 MongoDB URI length:', uri.length);
+        console.log('🔗 MongoDB URI starts with:', uri.substring(0, 20));
+        
+        return { uri };
+      },
       inject: [ConfigService],
     }),
     AuthModule,
