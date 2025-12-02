@@ -3,6 +3,7 @@
 ## The Problem
 
 The error shows:
+
 ```
 MongoServerError: bad auth : Authentication failed.
 ```
@@ -14,6 +15,7 @@ This means MongoDB Atlas is rejecting your username/password combination.
 ### Step 1: Check Render Logs
 
 After deploying with the new logging, check Render logs. You should see:
+
 ```
 🔗 MongoDB Connection String (masked): mongodb+srv://username:***@cluster0.xxxxx.mongodb.net/job-tracker
 🔗 MongoDB URI length: 123
@@ -21,6 +23,7 @@ After deploying with the new logging, check Render logs. You should see:
 ```
 
 **This will help you verify:**
+
 - ✅ Username is correct
 - ✅ Cluster name is correct
 - ✅ Database name is included
@@ -52,20 +55,21 @@ If you're not sure about the password:
 
 **If your password has special characters, you MUST URL-encode them:**
 
-| Character | URL-Encoded |
-| --------- | ----------- |
-| `@`       | `%40`       |
-| `#`       | `%23`       |
-| `%`       | `%25`       |
-| `&`       | `%26`       |
-| `+`       | `%2B`       |
-| `=`       | `%3D`       |
-| `?`       | `%3F`       |
-| `/`       | `%2F`       |
-| `:`       | `%3A`       |
-| ` ` (space) | `%20`     |
+| Character   | URL-Encoded |
+| ----------- | ----------- |
+| `@`         | `%40`       |
+| `#`         | `%23`       |
+| `%`         | `%25`       |
+| `&`         | `%26`       |
+| `+`         | `%2B`       |
+| `=`         | `%3D`       |
+| `?`         | `%3F`       |
+| `/`         | `%2F`       |
+| `:`         | `%3A`       |
+| ` ` (space) | `%20`       |
 
 **Example:**
+
 - Password: `MyP@ss#123`
 - URL-encoded: `MyP%40ss%23123`
 - Connection string: `mongodb+srv://username:MyP%40ss%23123@cluster0.xxxxx.mongodb.net/job-tracker`
@@ -73,11 +77,13 @@ If you're not sure about the password:
 ### Step 5: Test Connection String Format
 
 Your connection string should be:
+
 ```
 mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/job-tracker?retryWrites=true&w=majority
 ```
 
 **Check:**
+
 - ✅ Starts with `mongodb+srv://`
 - ✅ Username before `:`
 - ✅ Password after `:` (URL-encoded if needed)
@@ -100,6 +106,7 @@ mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/job-tracker?retryWrit
 **Most common issue!** If your password has `@`, `#`, `%`, etc., they MUST be URL-encoded.
 
 **Quick fix:** Use a simple password without special characters for testing:
+
 1. Create new user in MongoDB Atlas
 2. Set password: `SimplePass123` (no special chars)
 3. Update connection string in Render
@@ -147,6 +154,7 @@ If you're stuck, create a fresh user:
 ## ✅ After Fixing
 
 You should see in Render logs:
+
 ```
 🔗 MongoDB Connection String (masked): mongodb+srv://username:***@cluster0.xxxxx.mongodb.net/job-tracker
 [Nest] Connected to MongoDB successfully
@@ -156,6 +164,7 @@ You should see in Render logs:
 ## 🎯 Summary
 
 The "bad auth" error means:
+
 - ❌ Wrong username
 - ❌ Wrong password
 - ❌ Password needs URL encoding

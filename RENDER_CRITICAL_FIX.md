@@ -115,3 +115,4 @@ Instead of:
 **The issue IS using development mode (`nest start`) in production.**
 
 Fix the start command and your app will work! 🎉
+

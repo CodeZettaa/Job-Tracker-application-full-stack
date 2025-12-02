@@ -188,3 +188,4 @@ Your fullstack application is now live and ready to showcase in your portfolio!
 
 **Need help?** Check the logs in Railway and Vercel dashboards for detailed error messages.
 
+
