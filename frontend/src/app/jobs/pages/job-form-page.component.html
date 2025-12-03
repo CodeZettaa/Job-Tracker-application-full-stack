@@ -124,13 +124,24 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Job URL</label>
+        <label class="form-label">Job URL *</label>
         <input
           type="url"
           class="form-control"
           formControlName="jobUrl"
           placeholder="https://..."
+          [class.error]="
+            jobForm.get('jobUrl')?.invalid &&
+            jobForm.get('jobUrl')?.touched
+          "
         />
+        @if (jobForm.get('jobUrl')?.invalid && jobForm.get('jobUrl')?.touched) {
+          @if (jobForm.get('jobUrl')?.errors?.['required']) {
+            <small class="error-text">Job URL is required</small>
+          } @else if (jobForm.get('jobUrl')?.errors?.['pattern']) {
+            <small class="error-text">Please enter a valid URL (must start with http:// or https://)</small>
+          }
+        }
       </div>
 
       <div class="form-group">
@@ -143,13 +154,23 @@
         ></textarea>
       </div>
 
+      @if (store.error()) {
+        <div class="alert alert-error">
+          <strong>Error:</strong> {{ store.error() }}
+        </div>
+      }
+
       <div class="form-actions">
         <button
           type="submit"
           class="btn btn-primary"
           [disabled]="jobForm.invalid || store.loading()"
         >
-          {{ isEditMode ? "Update" : "Create" }} Job
+          @if (store.loading()) {
+            <span>Processing...</span>
+          } @else {
+            <span>{{ isEditMode ? "Update" : "Create" }} Job</span>
+          }
         </button>
         <a routerLink="/jobs" class="btn btn-outline">Cancel</a>
       </div>

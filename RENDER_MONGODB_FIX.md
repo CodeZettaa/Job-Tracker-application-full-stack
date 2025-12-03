@@ -183,4 +183,3 @@ Your app should connect successfully and you'll see:
 ---
 
 **Need help?** Double-check your connection string format matches the examples above exactly!
-

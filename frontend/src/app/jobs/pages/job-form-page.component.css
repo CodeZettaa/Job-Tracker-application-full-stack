@@ -76,6 +76,23 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
+.alert {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid;
+}
+
+.alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.alert-error strong {
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;

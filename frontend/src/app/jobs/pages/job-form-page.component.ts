@@ -37,7 +37,7 @@ export class JobFormPageComponent implements OnInit {
       applicationDate: ["", Validators.required],
       salaryExpectation: [null],
       salaryOffered: [null],
-      jobUrl: [""],
+      jobUrl: ["", [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
       notes: [""],
     });
   }
@@ -73,25 +73,48 @@ export class JobFormPageComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.jobForm.valid) {
-      const formValue = this.jobForm.value;
+    // Mark all fields as touched to show validation errors
+    if (this.jobForm.invalid) {
+      Object.keys(this.jobForm.controls).forEach((key) => {
+        this.jobForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
 
-      // Format date as ISO string
-      if (formValue.applicationDate) {
-        formValue.applicationDate = new Date(
-          formValue.applicationDate
-        ).toISOString();
-      }
+    const formValue = this.jobForm.value;
 
-      if (this.isEditMode && this.jobId) {
-        const result = await this.store.updateJob(this.jobId, formValue);
-        if (result) {
-          this.router.navigate(["/jobs", this.jobId]);
-        }
+    // Format date as ISO string
+    if (formValue.applicationDate) {
+      formValue.applicationDate = new Date(
+        formValue.applicationDate
+      ).toISOString();
+    }
+
+    // Ensure jobUrl is provided (required by backend)
+    if (!formValue.jobUrl || formValue.jobUrl.trim() === '') {
+      this.jobForm.get('jobUrl')?.setErrors({ required: true });
+      this.jobForm.get('jobUrl')?.markAsTouched();
+      return;
+    }
+
+    if (this.isEditMode && this.jobId) {
+      const result = await this.store.updateJob(this.jobId, formValue);
+      if (result) {
+        this.router.navigate(["/jobs", this.jobId]);
       } else {
-        const result = await this.store.createJob(formValue);
-        if (result) {
-          this.router.navigate(["/jobs"]);
+        // Error is already set in store, but we can show it here too
+        if (this.store.error()) {
+          alert(this.store.error());
+        }
+      }
+    } else {
+      const result = await this.store.createJob(formValue);
+      if (result) {
+        this.router.navigate(["/jobs"]);
+      } else {
+        // Error is already set in store, but we can show it here too
+        if (this.store.error()) {
+          alert(this.store.error());
         }
       }
     }

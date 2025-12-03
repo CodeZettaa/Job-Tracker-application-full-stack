@@ -107,8 +107,19 @@ export class JobsStore {
         return job;
       }
       return null;
-    } catch (err) {
-      this.error.set('Failed to create job');
+    } catch (err: any) {
+      // Extract error message from backend response
+      let errorMessage = 'Failed to create job';
+      if (err?.error?.message) {
+        if (Array.isArray(err.error.message)) {
+          errorMessage = err.error.message.join(', ');
+        } else {
+          errorMessage = err.error.message;
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      this.error.set(errorMessage);
       console.error('Error creating job:', err);
       return null;
     } finally {
@@ -133,8 +144,19 @@ export class JobsStore {
         return job;
       }
       return null;
-    } catch (err) {
-      this.error.set('Failed to update job');
+    } catch (err: any) {
+      // Extract error message from backend response
+      let errorMessage = 'Failed to update job';
+      if (err?.error?.message) {
+        if (Array.isArray(err.error.message)) {
+          errorMessage = err.error.message.join(', ');
+        } else {
+          errorMessage = err.error.message;
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      this.error.set(errorMessage);
       console.error('Error updating job:', err);
       return null;
     } finally {

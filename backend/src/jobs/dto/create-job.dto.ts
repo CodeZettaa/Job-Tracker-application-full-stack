@@ -42,9 +42,9 @@ export class CreateJobDto {
   @IsOptional()
   salaryOffered?: number;
 
-  @IsUrl()
-  @IsOptional()
-  jobUrl?: string;
+  @IsUrl({}, { message: 'Job URL must be a valid URL' })
+  @IsNotEmpty({ message: 'Job URL is required' })
+  jobUrl: string;
 
   @IsString()
   @IsOptional()
