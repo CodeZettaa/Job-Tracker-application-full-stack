@@ -3,6 +3,7 @@
 ## The Problem
 
 If you see:
+
 ```
 Error: querySrv ENOTFOUND _mongodb._tcp.cluster0.xxxxx.mongodb.net
 ```
@@ -31,25 +32,29 @@ This means your connection string has a **placeholder** (`cluster0.xxxxx.mongodb
    - **Driver:** `Node.js`
    - **Version:** `5.5 or later` (or latest available)
 5. **Copy the connection string** - it will look like:
+
    ```
    mongodb+srv://<username>:<password>@cluster0.abc123.mongodb.net/?retryWrites=true&w=majority
    ```
-   
+
    **Important:** Notice the cluster name is something like `cluster0.abc123.mongodb.net` (NOT `cluster0.xxxxx.mongodb.net`)
 
 ### Step 4: Replace Placeholders
 
 The connection string will have placeholders:
+
 ```
 mongodb+srv://<username>:<password>@cluster0.abc123.mongodb.net/?retryWrites=true&w=majority
 ```
 
 **Replace:**
+
 1. `<username>` → Your MongoDB Atlas username
 2. `<password>` → Your MongoDB Atlas password
 3. Add database name: `/job-tracker` before the `?`
 
 **Final format:**
+
 ```
 mongodb+srv://yourusername:yourpassword@cluster0.abc123.mongodb.net/job-tracker?retryWrites=true&w=majority
 ```
@@ -72,6 +77,7 @@ mongodb+srv://yourusername:yourpassword@cluster0.abc123.mongodb.net/job-tracker?
 | ` ` (space) | `%20`       |
 
 **Example:**
+
 - Password: `MyP@ss#123`
 - URL-encoded: `MyP%40ss%23123`
 - Connection string: `mongodb+srv://username:MyP%40ss%23123@cluster0.abc123.mongodb.net/job-tracker`
@@ -97,11 +103,13 @@ mongodb+srv://yourusername:yourpassword@cluster0.abc123.mongodb.net/job-tracker?
 ## 🔍 How to Identify Your Real Cluster Name
 
 Your cluster name in MongoDB Atlas will be something like:
+
 - `cluster0.abc123.mongodb.net`
 - `cluster1.xyz789.mongodb.net`
 - `mycluster.def456.mongodb.net`
 
 **It will NOT be:**
+
 - ❌ `cluster0.xxxxx.mongodb.net` (placeholder)
 - ❌ `1511` (just a number)
 - ❌ `cluster0.mongodb.net` (incomplete)
@@ -109,6 +117,7 @@ Your cluster name in MongoDB Atlas will be something like:
 ## ✅ Verification
 
 After updating, check Render logs. You should see:
+
 ```
 🔗 MongoDB Connection String (masked): mongodb+srv://username:***@cluster0.abc123.mongodb.net/job-tracker
 ```
@@ -158,4 +167,3 @@ After updating, check Render logs. You should see:
 ---
 
 **After updating with the real connection string, your app should connect successfully!** 🎉
-
