@@ -4,26 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Tracker</title>
-  <base href="/Job-Tracker-application-full-stack/">
   <script>
     // GitHub Pages 404.html - Redirect to index.html for SPA routing
     // This handles page refreshes on client-side routes
-    var path = window.location.pathname;
-    var baseHref = '/Job-Tracker-application-full-stack/';
-    
-    // Extract the route path (everything after baseHref)
-    var routePath = '';
-    if (path.startsWith(baseHref)) {
-      routePath = path.substring(baseHref.length - 1);
-    } else if (path.startsWith('/Job-Tracker-application-full-stack')) {
-      routePath = path.substring('/Job-Tracker-application-full-stack'.length);
-    } else {
-      routePath = path;
-    }
-    
-    // Redirect to index.html - Angular router will handle the route based on URL
-    // We use the full path so Angular can read it from window.location
-    window.location.replace(baseHref + 'index.html' + (routePath !== '/' ? routePath : ''));
+    (function() {
+      var path = window.location.pathname;
+      var baseHref = '/Job-Tracker-application-full-stack/';
+      
+      // Prevent infinite loop - if we're already on index.html, don't redirect
+      if (path.includes('index.html')) {
+        return;
+      }
+      
+      // Store the original path in sessionStorage so Angular can use it
+      var originalPath = path;
+      if (originalPath.startsWith(baseHref)) {
+        originalPath = originalPath.substring(baseHref.length - 1);
+      } else if (originalPath.startsWith('/Job-Tracker-application-full-stack')) {
+        originalPath = originalPath.substring('/Job-Tracker-application-full-stack'.length);
+      }
+      
+      // Store the path for Angular router
+      if (originalPath && originalPath !== '/' && originalPath !== '/index.html') {
+        sessionStorage.setItem('ghPagesOriginalPath', originalPath);
+      }
+      
+      // Simply redirect to index.html - Angular will read the path from sessionStorage or URL
+      var redirectUrl = baseHref + 'index.html';
+      
+      // Use replace to avoid adding to history and prevent loops
+      window.location.replace(redirectUrl);
+    })();
   </script>
 </head>
 <body>
